@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const routes = require("./routes/user.route");
 const taskRoutes = require("./routes/task.route");
-const errorHandler = require("./middleware/error")
+const ApiError = require("./utils/ApiError");
 
 const app = express();
 
@@ -22,10 +22,8 @@ require("./config/database").dbconnect();
 app.use("/v1/", routes);
 app.use("/v1/task/", taskRoutes);
 
-app.use(errorHandler);
-
 app.use((req, res, next) => {
-  next(new Error(404, "Not found!"));
+  throw new ApiError(404, "Not Found!");
 });
 
 app.listen(PORT, () => {

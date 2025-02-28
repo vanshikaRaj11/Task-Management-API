@@ -1,19 +1,19 @@
 const Task = require("../models/task.model");
 const User = require("../models/user.model");
+const catchAsync = require("../utils/catchAsync");
 
-const createTask = async (req, res) => {
+const createTask = catchAsync(async (req, res) => {
   const { title, description } = req.body;
   if ([title, description].some((field) => field?.trim() === "")) {
     throw new Error(400, "All fields are required");
   }
   const existingTask = await Task.findOne({ $or: [{ title }] });
   if (existingTask) {
-   return res.status(200).send({
-     code: 404,
-     message: "Task already exists",
-   });
+    return res.status(200).send({
+      code: 404,
+      message: "Task already exists",
+    });
   }
-
   const task = await Task.create({
     title,
     description,
@@ -33,9 +33,9 @@ const createTask = async (req, res) => {
     code: 200,
     message: "Task created Successfully",
   });
-};
+});
 
-const getTask = async (req, res) => {
+const getTask = catchAsync(async (req, res) => {
   const id = req.params.id;
   const task = await Task.findOne({ _id: id, isDelete: false });
   if (!task) {
@@ -49,9 +49,9 @@ const getTask = async (req, res) => {
     code: 200,
     message: "Task created Successfully",
   });
-};
+});
 
-const deleteTask = async (req, res) => {
+const deleteTask = catchAsync(async (req, res) => {
   const id = req.params.id;
   const task = await Task.findById(id);
   if (!task) {
@@ -72,9 +72,9 @@ const deleteTask = async (req, res) => {
     code: 200,
     message: "Task deleted Successfully",
   });
-};
+});
 
-const updateTask = async (req, res) => {
+const updateTask = catchAsync(async (req, res) => {
   const { title, description, status } = req.body;
   const id = req.params.id;
   const task = await Task.findById(id);
@@ -91,9 +91,9 @@ const updateTask = async (req, res) => {
     code: 200,
     message: "Task updated Successfully",
   });
-};
+});
 
-const queryTasks = async (req, res) => {
+const queryTasks = catchAsync(async (req, res) => {
   const status = req.query.status;
   const page = req.query.page || 1;
   const limit = req.query.limit || 10;
@@ -113,7 +113,7 @@ const queryTasks = async (req, res) => {
     code: 200,
     message: "Tasks fetched Successfully",
   });
-};
+});
 
 module.exports = {
   createTask,

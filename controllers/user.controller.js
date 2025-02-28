@@ -2,6 +2,7 @@ const User = require("../models/user.model");
 const ApiError = require("../utils/ApiError");
 
 const jwt = require("jsonwebtoken");
+const catchAsync = require("../utils/catchAsync");
 
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
@@ -21,7 +22,7 @@ const generateAccessAndRefreshTokens = async (userId) => {
   }
 };
 
-const register = async (req, res) => {
+const register = catchAsync(async (req, res) => {
   // get user details from frontend
   const { username, email, password } = req.body;
   // validation
@@ -55,9 +56,9 @@ const register = async (req, res) => {
     code: 200,
     message: "User registered Successfully",
   });
-};
+});
 
-const login = async (req, res) => {
+const login = catchAsync(async (req, res) => {
   const { email, username, password } = req.body;
   if (!(username || email)) {
     throw new Error(400, "username or email is required");
@@ -91,7 +92,7 @@ const login = async (req, res) => {
       code: 200,
       message: "User log in Successfully",
     });
-};
+});
 
 const refreshAccessToken = async (req, res) => {
   const incomingRefreshToken = req.cookies.refrehToken || req.body.refrehToken;
