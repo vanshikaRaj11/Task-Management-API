@@ -1,9 +1,12 @@
 const User = require("../models/user.model");
 const jwt = require("jsonwebtoken");
 const ApiError = require("../utils/ApiError");
+const catchAsync = require("../utils/catchAsync");
 require("dotenv").config();
 
-const verifyJwt = async (req, res, next) => {
+const verifyJwt = catchAsync(async (req, res, next) => {
+  console.log(req.header("Authorization"));
+  console.log(process.env.ACCESS_TOKEN_SECRET);
   try {
     const token =
       req.cookies?.accessToken ||
@@ -26,6 +29,6 @@ const verifyJwt = async (req, res, next) => {
     console.log(error.message);
     throw new ApiError(401, error?.message || "Invalid access token");
   }
-};
+});
 
 module.exports = verifyJwt;
