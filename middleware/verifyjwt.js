@@ -5,8 +5,6 @@ const catchAsync = require("../utils/catchAsync");
 require("dotenv").config();
 
 const verifyJwt = catchAsync(async (req, res, next) => {
-  console.log(req.header("Authorization"));
-  console.log(process.env.ACCESS_TOKEN_SECRET);
   try {
     const token =
       req.cookies?.accessToken ||
@@ -15,7 +13,7 @@ const verifyJwt = catchAsync(async (req, res, next) => {
       throw new ApiError(401, "Unauthorized request");
     }
 
-    const decodedToken = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
+    const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
     const user = await User.findById(decodedToken?._id).select(
       "-password -refreshToken"

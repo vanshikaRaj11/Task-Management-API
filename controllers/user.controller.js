@@ -7,6 +7,7 @@ const catchAsync = require("../utils/catchAsync");
 const generateAccessAndRefreshTokens = async (userId) => {
   try {
     const user = await User.findById(userId);
+    console.log(user)
     const accessToken = user.generateAccessToken();
     const refreshToken = user.generateRefreshToken();
 
@@ -95,7 +96,9 @@ const login = catchAsync(async (req, res) => {
 });
 
 const refreshAccessToken = async (req, res) => {
-  const incomingRefreshToken = req.cookies.refrehToken || req.body.refrehToken;
+  const incomingRefreshToken =
+    req.cookies.refreshToken || req.body.refreshToken;
+  console.log(incomingRefreshToken);
   if (!incomingRefreshToken) {
     throw new Error(401, "Unauthorized request");
   }
